@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package mongohandler;
+
+option go_package = "github.com/loukaspe/auth/mongohandler";
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string username = 1;
+  string info = 2;
+}
+
+service MongoHandler {
+  rpc Login(LoginRequest) returns (LoginResponse) {};
+}

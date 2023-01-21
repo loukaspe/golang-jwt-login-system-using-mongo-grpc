@@ -1,0 +1,38 @@
+services:
+  proxy-service:
+    restart: always
+    build:
+      context: ./proxy-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - "40001:40000"
+      - "8000:8000"
+    volumes:
+      - go-modules:/go/pkg/mod
+
+  db-handler-service:
+    restart: always
+    build:
+      context: ./db-handler
+      dockerfile: Dockerfile.dev
+    ports:
+      - "40002:40000"
+    volumes:
+      - go-modules:/go/pkg/mod
+    depends_on:
+      - mongodb-service
+
+  mongodb-service:
+    image: mongo:4.2.9
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: auth
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: pass
+    volumes:
+      - ./data/mongodb:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  go-modules:
